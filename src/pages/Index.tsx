@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,10 +6,30 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Icon from '@/components/ui/icon';
 import ChatWidget from '@/components/ChatWidget';
+import AnimatedBackground from '@/components/AnimatedBackground';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const elements = document.querySelectorAll('.scroll-reveal');
+    elements.forEach((el) => observerRef.current?.observe(el));
+
+    return () => observerRef.current?.disconnect();
+  }, []);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -128,7 +148,8 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      <AnimatedBackground />
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -241,7 +262,7 @@ const Index = () => {
 
       <section id="benefits" className="py-20 px-6">
         <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 scroll-reveal">
             {benefits.map((benefit, index) => (
               <Card key={index} className="glass glass-hover p-8 text-center">
                 <h3 className="text-4xl font-bold text-primary mb-2">{benefit.title}</h3>
@@ -261,7 +282,7 @@ const Index = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <Card key={index} className="glass glass-hover p-8 space-y-4">
+              <Card key={index} className="glass glass-hover p-8 space-y-4 scroll-reveal">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-blue-600/20 flex items-center justify-center">
                   <Icon name={feature.icon as any} size={28} className="text-primary" />
                 </div>
@@ -284,7 +305,7 @@ const Index = () => {
             {pricing.map((plan, index) => (
               <Card 
                 key={index} 
-                className={`glass glass-hover p-8 relative ${plan.popular ? 'ring-2 ring-primary glow' : ''}`}
+                className={`glass glass-hover p-8 relative scroll-reveal ${plan.popular ? 'ring-2 ring-primary glow' : ''}`}
               >
                 {plan.popular && (
                   <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary">
@@ -333,7 +354,7 @@ const Index = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="glass glass-hover p-8 space-y-4">
+              <Card key={index} className="glass glass-hover p-8 space-y-4 scroll-reveal">
                 <div className="flex gap-1">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Icon key={i} name="Star" size={20} className="text-yellow-400 fill-yellow-400" />
