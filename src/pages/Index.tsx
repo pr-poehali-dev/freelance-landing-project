@@ -3,10 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Icon from '@/components/ui/icon';
+import ChatWidget from '@/components/ChatWidget';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -133,11 +136,43 @@ const Index = () => {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center glow">
                 <Icon name="Briefcase" size={24} className="text-white" />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                FreelanceHub
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                Корвикс
               </span>
             </div>
             
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                  <Icon name="Menu" size={24} />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] glass">
+                <div className="flex flex-col gap-6 mt-8">
+                  {['home', 'benefits', 'features', 'pricing', 'testimonials', 'faq', 'contact'].map((section) => (
+                    <button
+                      key={section}
+                      onClick={() => {
+                        scrollToSection(section);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`text-lg font-medium transition-colors hover:text-primary text-left ${
+                        activeSection === section ? 'text-primary' : 'text-foreground'
+                      }`}
+                    >
+                      {section === 'home' && 'Главная'}
+                      {section === 'benefits' && 'Преимущества'}
+                      {section === 'features' && 'Функционал'}
+                      {section === 'pricing' && 'Тарифы'}
+                      {section === 'testimonials' && 'Отзывы'}
+                      {section === 'faq' && 'FAQ'}
+                      {section === 'contact' && 'Контакты'}
+                    </button>
+                  ))}
+                </div>
+              </SheetContent>
+            </Sheet>
+
             <div className="hidden md:flex items-center gap-8">
               {['home', 'benefits', 'features', 'pricing', 'testimonials', 'faq', 'contact'].map((section) => (
                 <button
@@ -173,19 +208,19 @@ const Index = () => {
       <section id="home" className="pt-32 pb-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center space-y-8 animate-fade-in">
-            <Badge className="glass px-6 py-2 text-sm font-medium">
+            <Badge className="glass px-6 py-2 text-sm font-medium border-primary/20">
               🚀 Более 500,000 специалистов уже с нами
             </Badge>
             
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight">
-              <span className="bg-gradient-to-r from-white via-blue-100 to-primary bg-clip-text text-transparent">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight">
+              <span className="bg-gradient-to-r from-primary via-blue-500 to-blue-600 bg-clip-text text-transparent">
                 Найдите лучших
               </span>
               <br />
-              <span className="text-white">фрилансеров</span>
+              <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">фрилансеров</span>
             </h1>
 
-            <p className="text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed px-4">
               Платформа нового поколения для поиска специалистов и проектов.
               Безопасно, быстро, эффективно.
             </p>
@@ -358,7 +393,9 @@ const Index = () => {
         </div>
       </section>
 
-      <footer className="border-t border-white/10 py-12 px-6 mt-20">
+      <ChatWidget />
+
+      <footer className="border-t border-border py-12 px-6 mt-20">
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
@@ -366,7 +403,7 @@ const Index = () => {
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
                   <Icon name="Briefcase" size={20} className="text-white" />
                 </div>
-                <span className="text-xl font-bold">FreelanceHub</span>
+                <span className="text-xl font-bold">Корвикс</span>
               </div>
               <p className="text-foreground/60 text-sm">
                 Платформа для поиска специалистов и проектов
@@ -402,7 +439,7 @@ const Index = () => {
           </div>
 
           <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-foreground/60 text-sm">© 2024 FreelanceHub. Все права защищены.</p>
+            <p className="text-foreground/60 text-sm">© 2024 Корвикс. Все права защищены.</p>
             <div className="flex gap-6">
               <a href="#" className="text-foreground/60 hover:text-primary transition-colors">
                 <Icon name="Github" size={20} />
